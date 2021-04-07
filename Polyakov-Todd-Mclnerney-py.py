@@ -2,10 +2,8 @@
 Decision Tree Induction
 Starter code author: Steven Bogaerts
 '''
-
 import math
 
-# Copy your AttributeSpec, Example, and ExampleList classes into this file
 class AttributeSpec:
     def __init__(self,name,vals):
         self.__name = name
@@ -86,17 +84,41 @@ class ExampleList(object):
                 return False
         return True
         def specialLog2(self, val):
+            if val == 0:
+                return 0
+            else:
+                return math.log(val, 2)
+    
+    def specialLog2(self, val):
         if val == 0:
             return 0
         else:
             return math.log(val, 2)
 
     def calcEntropy(self, classAttrSpec):
-        # Calculates the entropy of this example list over the class.
-        return -1
-        
+        # Calculates the entropy of this example list over the class
+        if(self.isEmpty()):#special case if input list is empty
+            return 0
+        numberOfVals = classAttrSpec.getNumVals()
+        uniqueValuesList = []*numberOfVals
+        for x in range(numberOfVals):#get the unique outcomes names
+            if not classAttrSpec.getValAt(x) in uniqueValuesList:
+                uniqueValuesList.append(classAttrSpec.getValAt(x))
+        numberOfOccurance = [0]*numberOfVals
+        for x in range(self.getNumExamples()):#find how many occurence of each outcome there is
+            for value in uniqueValuesList:
+                if value == self.__exampleList[x].getClass():
+                    numberOfOccurance[uniqueValuesList.index(value)] +=1   
+        totalEntrees = 0
+        for number in numberOfOccurance:
+            totalEntrees+=number
+        entropy = 0
+        for x in range(len(uniqueValuesList)):
+            entropy+= -(numberOfOccurance[x]/totalEntrees) * self.specialLog2(numberOfOccurance[x]/totalEntrees)
+        return entropy
     def calcGain(self, attrSpec, classAttrSpec):
         # Calculates the gain from splitting on attribute attrSpec.
+
         return -1
 
     def chooseAttr(self, attrSpecs, classAttrSpec):
@@ -240,30 +262,6 @@ def testAll():
     testCountClassValues()
     testGetMajorityClass()
     testSplit()
-testSplit()
-'''
-# Put the following methods into your ExampleList class:
-    
-    def specialLog2(self, val):
-        if val == 0:
-            return 0
-        else:
-            return math.log(val, 2)
-
-    def calcEntropy(self, classAttrSpec):
-        # Calculates the entropy of this example list over the class.
-        return -1
-        
-    def calcGain(self, attrSpec, classAttrSpec):
-        # Calculates the gain from splitting on attribute attrSpec.
-        return -1
-
-    def chooseAttr(self, attrSpecs, classAttrSpec):
-        # Returns the attribute specification that best splits the example list.
-        return None
-    
-'''
-
 ############################################################################
 
 def testEntropy():
@@ -858,3 +856,4 @@ def mTest():
 
     runTest(attrSpecs, classAttrSpec, defaultClass, examples)
 
+testEntropy()
