@@ -123,11 +123,12 @@ class ExampleList(object):
             numOfExamplesInExample = exampleList.getNumExamples()
             gain+=numOfExamplesInExample/numOfExamples * exampleList.calcEntropy(classAttrSpec)
         return self.calcEntropy(classAttrSpec) - gain
-
     def chooseAttr(self, attrSpecs, classAttrSpec):
         # Returns the attribute specification that best splits the example list.
-        return None
-
+        listOfGain = []
+        for attrSpec in attrSpecs:
+            listOfGain.append(self.calcGain(attrSpec,classAttrSpec))
+        return attrSpecs[listOfGain.index(max(listOfGain))]    
     def countClassValues(self, classAttrSpec):
         '''
         For the examples in this ExampleList,
@@ -858,4 +859,4 @@ def mTest():
     examples = ExampleList([e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14])
 
     runTest(attrSpecs, classAttrSpec, defaultClass, examples)
-testGain()
+testChooseAttr()
