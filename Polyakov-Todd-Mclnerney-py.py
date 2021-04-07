@@ -88,13 +88,11 @@ class ExampleList(object):
                 return 0
             else:
                 return math.log(val, 2)
-    
     def specialLog2(self, val):
         if val == 0:
             return 0
         else:
             return math.log(val, 2)
-
     def calcEntropy(self, classAttrSpec):
         # Calculates the entropy of this example list over the class
         if(self.isEmpty()):#special case if input list is empty
@@ -118,8 +116,13 @@ class ExampleList(object):
         return entropy
     def calcGain(self, attrSpec, classAttrSpec):
         # Calculates the gain from splitting on attribute attrSpec.
-
-        return -1
+        splitExamples = self.split(attrSpec)
+        gain = 0
+        numOfExamples = self.getNumExamples()
+        for exampleList in splitExamples:
+            numOfExamplesInExample = exampleList.getNumExamples()
+            gain+=numOfExamplesInExample/numOfExamples * exampleList.calcEntropy(classAttrSpec)
+        return self.calcEntropy(classAttrSpec) - gain
 
     def chooseAttr(self, attrSpecs, classAttrSpec):
         # Returns the attribute specification that best splits the example list.
@@ -855,5 +858,4 @@ def mTest():
     examples = ExampleList([e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14])
 
     runTest(attrSpecs, classAttrSpec, defaultClass, examples)
-
-testEntropy()
+testGain()
