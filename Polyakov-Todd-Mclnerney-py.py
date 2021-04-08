@@ -267,7 +267,6 @@ def testAll():
     testGetMajorityClass()
     testSplit()
 ############################################################################
-
 def testEntropy():
     classAttr = AttributeSpec("needHelp", ["No", "Yes"])
     
@@ -289,7 +288,6 @@ def testEntropy():
     ex5 = Example({"a":1}, 0)
     exList = ExampleList([ex1, ex2, ex3, ex4, ex5])
     print(exList.calcEntropy(classAttr))
-    
 def testGain():
     heightAttr = AttributeSpec("height", [1, 2, 3])
     widthAttr = AttributeSpec("width", [1, 2, 3])
@@ -305,7 +303,6 @@ def testGain():
     print(exList.calcGain(heightAttr, classAttr))
     print(exList.calcGain(widthAttr, classAttr))
     print(exList.calcGain(heavyAttr, classAttr))
-
 def testChooseAttr():
     heightAttr = AttributeSpec("height", [1, 2, 3])
     widthAttr = AttributeSpec("width", [1, 2, 3])
@@ -325,8 +322,6 @@ def testChooseAttr():
     
     print("Attribute chosen:")
     print(exList.chooseAttr([heightAttr, heavyAttr, widthAttr], classAttr))
-    
-
 ###########################################################################
 class DTree(object):
     '''
@@ -394,7 +389,10 @@ class DTree(object):
         '''
         Given this DTree, determine the classification of the given example.
         '''
-        return None
+        if self.isLeaf():
+            return self.cls
+        return self.children[example.getValFor(self.question.getName())].classify(example)
+
 
     def __repr__(self):
         return self.__reprHelper("")
@@ -420,7 +418,6 @@ class DTree(object):
         for i in range(n):
             result += " "
         return result
-
 ########################################################################
 def demoTree(verbose=True):
     '''
@@ -464,7 +461,6 @@ def demoTree(verbose=True):
         
         print("Returning:")
     return tree
-
 def testClassify():
     tree = demoTree(False) # get the tree built above
     print(tree)
@@ -859,4 +855,4 @@ def mTest():
     examples = ExampleList([e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14])
 
     runTest(attrSpecs, classAttrSpec, defaultClass, examples)
-testChooseAttr()
+testClassify()
