@@ -510,7 +510,26 @@ def decisionTreeLearning(examples, attrSpecs, classAttrSpec, defaultClass):
     classAttrSpec - an AttributeSpec instance, representing the class
     defaultClass - something in classAttrSpec.__vals
     '''
-    return None
+    if examples.isEmpty():
+        return defaultClass
+    elif examples.allSameClass():
+        return examples.getExampleAt(0).getClass()
+    elif attrSpecs == None:
+        return examples.getMajorityClass(classAttrSpec)
+    else:
+        maj = examples.getMajorityClass(classAttrSpec)
+        attr = examples.chooseAttr(attrSpecs,classAttrSpec)
+        root =  DTree.makeDTree(attr, {})
+        for vi in range(attr.getNumVals()):
+            Si =  examples.split(attr)[vi]
+            A = attrSpecs.copy()
+            A.remove(attr)
+            subtree = decisionTreeLearning(Si, A , classAttrSpec, maj)
+            if type(subtree) == DTree:
+                root.children[attr.getValAt(vi)] = subtree
+            else:
+                root.children[attr.getValAt(vi)] = DTree.makeLeaf(subtree)
+        return root
 
 ########################################################################
 def runTest(attrSpecs, classAttrSpec, defaultClass, examples):
@@ -855,4 +874,3 @@ def mTest():
     examples = ExampleList([e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14])
 
     runTest(attrSpecs, classAttrSpec, defaultClass, examples)
-testClassify()
